@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Portfolio</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+transition:0.4s;
+overflow-x:hidden;
+}
+
+body.light{
+background:#f4f4f4;
+color:#111;
+}
+
+header{
+height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+}
+
+h1{
+font-size:60px;
+margin-bottom:20px;
+}
+
+.subtitle{
+opacity:0.7;
+margin-bottom:40px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.toggle{
+position:fixed;
+top:20px;
+right:20px;
+}
+
+section{
+padding:80px 10%;
+}
+
+.projects{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+}
+
+.card{
+height:220px;
+background:linear-gradient(135deg,#6366f1,#8b5cf6);
+border-radius:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+cursor:pointer;
+transition:transform .2s;
+transform-style:preserve-3d;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.modal-content{
+background:white;
+color:black;
+padding:40px;
+border-radius:20px;
+max-width:500px;
+}
+
+.close{
+margin-top:20px;
+}
+
+.fade{
+opacity:0;
+transform:translateY(40px);
+transition:1s;
+}
+
+.fade.show{
+opacity:1;
+transform:translateY(0);
+}
+
+</style>
+</head>
+
+<body>
+
+<button class="toggle">🌙 Mode</button>
+
+<header>
+
+<h1>My Portfolio</h1>
+<p class="subtitle">Creative Developer</p>
+
+</header>
+
+<section>
+
+<h2>Projects</h2>
+
+<div class="projects">
+
+<div class="card fade" onclick="openModal('Project 1 설명')">
+Project 1
+</div>
+
+<div class="card fade" onclick="openModal('Project 2 설명')">
+Project 2
+</div>
+
+<div class="card fade" onclick="openModal('Project 3 설명')">
+Project 3
+</div>
+
+<div class="card fade" onclick="openModal('Project 4 설명')">
+Project 4
+</div>
+
+</div>
+
+</section>
+
+<div class="modal" id="modal">
+<div class="modal-content">
+<p id="modalText"></p>
+<button class="close" onclick="closeModal()">닫기</button>
+</div>
+</div>
+
+<script>
+
+const toggle = document.querySelector(".toggle")
+
+toggle.onclick = () =>{
+document.body.classList.toggle("light")
+}
+
+function openModal(text){
+
+document.getElementById("modalText").innerText=text
+document.getElementById("modal").style.display="flex"
+
+}
+
+function closeModal(){
+
+document.getElementById("modal").style.display="none"
+
+}
+
+const observer = new IntersectionObserver(entries =>{
+
+entries.forEach(entry =>{
+
+if(entry.isIntersecting){
+entry.target.classList.add("show")
+}
+
+})
+
+})
+
+document.querySelectorAll(".fade").forEach(el=>observer.observe(el))
+
+
+// 3D Tilt Effect
+
+document.querySelectorAll(".card").forEach(card=>{
+
+card.addEventListener("mousemove",e=>{
+
+const rect = card.getBoundingClientRect()
+
+const x = e.clientX - rect.left
+const y = e.clientY - rect.top
+
+const centerX = rect.width/2
+const centerY = rect.height/2
+
+const rotateX = -(y-centerY)/10
+const rotateY = (x-centerX)/10
+
+card.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+
+})
+
+card.addEventListener("mouseleave",()=>{
+
+card.style.transform="rotateX(0) rotateY(0)"
+
+})
+
+})
+
+</script>
+
+</body>
+</html>
