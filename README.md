@@ -1,2 +1,2 @@
-# portpolio
+# portfolio
 김채린 포트폴리오
