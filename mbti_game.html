@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MBTI 간단 테스트</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f5f7fb}
+.navbar{position:sticky;top:0;background:#6366f1;color:white;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.nav-title{font-weight:bold}
+.nav-menu{display:flex;gap:16px}
+.nav-menu a{color:white;text-decoration:none;font-size:14px;opacity:.9}
+.nav-menu a:hover{opacity:1}
+.page{display:flex;justify-content:center;align-items:center;min-height:calc(100vh - 56px);padding:20px}
+.container{background:white;padding:24px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);max-width:600px;width:90%}
+h1{text-align:center}
+.question{margin:20px 0;font-size:18px}
+.answers button{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:10px;background:#eef2ff;cursor:pointer;font-size:16px;transition:.2s}
+.answers button:hover{background:#c7d2fe}
+.progress{height:8px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.progress-bar{height:100%;width:0;background:#6366f1;transition:.3s}
+.result{text-align:center}
+.restart{margin-top:16px;padding:10px 16px;border:none;border-radius:8px;background:#6366f1;color:white;cursor:pointer}
+@media (max-width:480px){
+.question{font-size:16px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="nav-title">MBTI Test</div>
+<div class="nav-menu">
+<a href="#">홈</a>
+<a href="#" onclick="restart()">테스트 다시하기</a>
+<a href="#">MBTI 설명</a>
+</div>
+</nav>
+<div class="page">
+<div class="container">
+<h1>간단 MBTI 테스트</h1>
+<div class="progress"><div class="progress-bar" id="bar"></div></div>
+<div id="app"></div>
+</div>
+</div>
+<script>
+const questions=[
+{q:"사람이 많은 모임에서 에너지가 생긴다",type:"EI"},
+{q:"계획보다 즉흥이 좋다",type:"JP"},
+{q:"사실이 의견보다 중요하다",type:"SN"},
+{q:"결정할 때 논리가 중요하다",type:"TF"},
+{q:"주말에 밖에 나가고 싶다",type:"EI"},
+{q:"미래 가능성을 자주 상상한다",type:"SN"},
+{q:"감정보다 규칙이 우선이다",type:"TF"},
+{q:"마감 전에 미리 끝내는 편이다",type:"JP"}
+]
+
+let index=0
+let score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0}
+
+const app=document.getElementById("app")
+const bar=document.getElementById("bar")
+
+function render(){
+if(index>=questions.length){
+showResult()
+return
+}
+const q=questions[index]
+bar.style.width=((index/questions.length)*100)+"%"
+app.innerHTML=`
+<div class="question">${q.q}</div>
+<div class="answers">
+<button onclick="answer(true)">그렇다</button>
+<button onclick="answer(false)">아니다</button>
+</div>`
+}
+
+function answer(agree){
+const type=questions[index].type
+if(agree) score[type[0]]++
+else score[type[1]]++
+index++
+render()
+}
+
+function showResult(){
+bar.style.width="100%"
+const result=
+(score.E>score.I?"E":"I")+
+(score.S>score.N?"S":"N")+
+(score.T>score.F?"T":"F")+
+(score.J>score.P?"J":"P")
+
+app.innerHTML=`
+<div class="result">
+<h2>당신의 MBTI는</h2>
+<h1>${result}</h1>
+<button class="restart" onclick="restart()">다시 테스트</button>
+</div>`
+}
+
+function restart(){
+index=0
+score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0}
+render()
+}
+
+render()
+</script>
+</body>
+</html>
